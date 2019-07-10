@@ -1,0 +1,47 @@
+{
+  "name": "validator-tool",
+  "version": "1.0.0",
+  "description": "Command line tool for Volta and EWC validator accounts.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "validatortool": "dist/index.js"
+  },
+  "scripts": {
+    "test": "mocha",
+    "clean": "rm -rf dist/",
+    "build": "node_modules/typescript/bin/tsc",
+    "build:clean": "npm run clean && npm run build",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngyam/validator-tool.git"
+  },
+  "keywords": [
+    "authority",
+    "validator",
+    "admin",
+    "ewf",
+    "volta",
+    "ewc",
+    "reward",
+    "payout",
+    "address"
+  ],
+  "author": "Adam Nagy (ngy.am.zs@gmail.com)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/ngyam/validator-tool/issues"
+  },
+  "homepage": "https://github.com/ngyam/validator-tool#readme",
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  },
+  "dependencies": {
+    "fs-extra": "^8.1.0",
+    "typescript": "^3.5.3",
+    "web3": "1.0.0-beta.55",
+    "yargs": "^13.2.4"
+  }
+}
