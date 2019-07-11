@@ -1,5 +1,5 @@
 {
-  "name": "validator-tool",
+  "name": "ewf-validator-tool",
   "version": "1.0.0",
   "description": "Command line tool for sensitive operations with Volta and EWC validator accounts.",
   "main": "dist/index.js",
