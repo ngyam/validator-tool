@@ -95,7 +95,7 @@ export async function transfer(argv) {
             gas: web3.utils.toWei(argv.gas, "wei"),
             gasPrice: web3.utils.toWei(argv.gasprice, "gwei")
         })
-        console.log("Success!")
+        console.log("Successful transaction!")
         console.log(JSON.stringify(result, null, 2))
     } catch (error) {
         console.error("Transaction failed!")

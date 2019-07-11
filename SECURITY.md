@@ -1,0 +1,1 @@
+If you find security vulnerabilities I kindly ask you not to disclose it in public. Please let me (ngy.am.zs@gmail.com) know upfront. I will assess the issue as soon as possible on a best-effort basis and will give you an estimate for when I have a fix and release available for an eventual public disclosure.
