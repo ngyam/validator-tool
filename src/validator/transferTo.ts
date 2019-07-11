@@ -3,7 +3,9 @@ import {
     connect,
     addAccount,
     deleteAccountFile,
-    connectionClose
+    connectionClose,
+    validateFileInput,
+    decryptAccount
 } from "../utils"
 
 
@@ -23,11 +25,25 @@ exports.builder = (yargs) => {
             demandOption: true,
             default: undefined
         })
-        .options('accountfilepath', {
-            desc: 'Path to the validator account file containing the address and private key. This account is used as transaction sender. The file is deleted after use.',
-            demandOption: true,
+        .option('accountfilepath', {
+            desc: 'Path to a validator account file containing the address and private key. This account is used as transaction sender. The file is deleted after use. If --accountfilepath is given, --keyfilepath and --secretpath are ignored.',
+            demandOption: false,
             type: 'string',
-            alias: ["acc", "a", "f"],
+            alias: ["a", "f"],
+            default: undefined
+        })
+        .option('keyfilepath', {
+            desc: 'Path to an ethereum keystore file. They usually start with "UTC" and can be found in the chain folder on your machine. If you specify a --keyfilepath, you must specify a --secretpath too. If --accountfilepath is also given, --keyfilepath and --secretpath are ignored.',
+            demandOption: false,
+            type: 'string',
+            alias: ["kp", "k"],
+            default: undefined
+        })
+        .option('secretpath', {
+            desc: 'Path to a textfile containing the password for the keystore file specified with --keyfilepath. If --accountfilepath is given, --keyfilepath and --secretpath are ignored.',
+            demandOption: false,
+            type: 'string',
+            alias: ["sp", "s"],
             default: undefined
         })
         .option('rpc', {
@@ -57,9 +73,18 @@ exports.handler = async function (argv) {
 }
 
 export async function transfer(argv) {
+    validateFileInput(argv)
+
     const web3 = await connect(argv.rpc)
-    const fpath = path.resolve(argv.accountfilepath)
-    const validator = addAccount(web3, fpath)
+    
+    let validator
+    let fpath
+    if (argv.accountfilepath) {
+        fpath = path.resolve(argv.accountfilepath)
+        validator = addAccount(web3, fpath)
+    } else {
+        validator = await decryptAccount(web3, path.resolve(argv.keyfilepath), path.resolve(argv.secretpath))
+    }
 
     let result
     try {
@@ -77,7 +102,9 @@ export async function transfer(argv) {
         console.error(error)
         result = error
     } finally {
-        await deleteAccountFile(fpath)
+        if (fpath) {
+            await deleteAccountFile(argv.accountfilepath)
+        }
         await connectionClose(web3)
     }
     return result

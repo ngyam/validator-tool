@@ -4,7 +4,9 @@ import {
     addAccount,
     deleteAccountFile,
     getRewardContract,
-    connectionClose
+    connectionClose,
+    decryptAccount,
+    validateFileInput
 } from "../../utils"
 
 
@@ -18,11 +20,25 @@ exports.builder = (yargs) => {
             demandOption: true,
             default: undefined
         })
-        .options('accountfilepath', {
-            desc: 'Path to the validator account file containing the address and private key. This account is used as transaction sender. The file is deleted after use.',
-            demandOption: true,
+        .option('accountfilepath', {
+            desc: 'Path to a validator account file containing the address and private key. This account is used as transaction sender. The file is deleted after use. If --accountfilepath is given, --keyfilepath and --secretpath are ignored.',
+            demandOption: false,
             type: 'string',
             alias: ["a", "f"],
+            default: undefined
+        })
+        .option('keyfilepath', {
+            desc: 'Path to an ethereum keystore file. They usually start with "UTC" and can be found in the chain folder on your machine. If you specify a --keyfilepath, you must specify a --secretpath too. If --accountfilepath is also given, --keyfilepath and --secretpath are ignored.',
+            demandOption: false,
+            type: 'string',
+            alias: ["kp", "k"],
+            default: undefined
+        })
+        .option('secretpath', {
+            desc: 'Path to a textfile containing the password for the keystore file specified with --keyfilepath. If --accountfilepath is given, --keyfilepath and --secretpath are ignored.',
+            demandOption: false,
+            type: 'string',
+            alias: ["sp", "s"],
             default: undefined
         })
         .option('rpc', {
@@ -52,9 +68,19 @@ exports.handler = async function (argv) {
 }
 
 export async function changePayoutAddress(argv) {
+    validateFileInput(argv)
+    
     const web3 = await connect(argv.rpc)
-    const fpath = path.resolve(argv.accountfilepath)
-    let validator = addAccount(web3, fpath)
+
+    let validator
+    let fpath
+    if (argv.accountfilepath) {
+        fpath = path.resolve(argv.accountfilepath)
+        validator = addAccount(web3, fpath)
+    } else {
+        validator = await decryptAccount(web3, path.resolve(argv.keyfilepath), path.resolve(argv.secretpath))
+    }
+
     let contract = getRewardContract(web3)
 
     let result
@@ -64,13 +90,15 @@ export async function changePayoutAddress(argv) {
             gas: web3.utils.toWei(argv.gas, "wei"),
             gasPrice: web3.utils.toWei(argv.gasprice, "gwei")
         })
-        console.log("Change successful!")
+        console.log("Change of payout address successful!")
         console.log(JSON.stringify(result, null, 2))
     } catch (error) {
         console.error(error)
         result = error
     } finally {
-        //await deleteAccountFile(argv.accountfilepath)
+        if (fpath) {
+            await deleteAccountFile(argv.accountfilepath)
+        }
         await connectionClose(web3)
     }
     return result

@@ -28,6 +28,33 @@ export function addAccount(web3: any, accountPath: string): string {
     return web3.utils.toChecksumAddress(validator.address)
 }
 
+export async function decryptAccount(web3: any, keyfilePath: string, secretPath: string): Promise<string> {
+        let keyObject = await fs.readJson(keyfilePath)
+        let secretString = (fs.readFileSync(secretPath, "utf-8")).trim()
+        web3.eth.accounts.wallet.decrypt([keyObject], secretString)
+        return web3.utils.toChecksumAddress("0x" + keyObject.address)
+}
+
+export interface ArgvFileInput {
+    accountfilepath?: string
+    keyfilepath?: string
+    secretpath?: string
+}
+
+export function validateFileInput(argv: ArgvFileInput) {
+    if (!argv["accountfilepath"] && !argv["keyfilepath"] && !argv["secretpath"]) {
+        throw("Error! Validator credentials are needed: Please specify either an --accountfilepath to a json file with address/privateKey fields, or a --keyfilepath/--secretpath for an ethereum keystore file/password file combo.")
+    }
+
+    if (!argv["accountfilepath"] && argv["keyfilepath"] && !argv["secretpath"]) {
+        throw("Error! Validator credentials are needed: Please specify a --secretpath to a text file containing the password for the encrypted account.")
+    }
+
+    if (!argv["accountfilepath"] && !argv["keyfilepath"] && argv["secretpath"]) {
+        throw("Error! Validator credentials are needed: Please specify a --keyfilepath to an ethereum keystore file of the encrypted account.")
+    }
+}
+
 export function getRewardContract(web3: any): any {
     let RewardJson = JSON.parse(fs.readFileSync(Constants.rewardContractPath, "utf-8"))
     return new web3.eth.Contract(RewardJson.abi, Constants.REWARD_ADDRESS)
@@ -47,6 +74,5 @@ export async function deleteAccountFile(accountFilePath: string): Promise<void> 
 export async function connectionClose(web3: any) {
     try {
         web3.currentProvider.connection.close()
-    } catch(error) {
-    }
+    } catch (error) { }
 }
