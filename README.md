@@ -18,7 +18,7 @@ Features:
 
 Install the command with:
 ```bash
-npm install -g validator-tool
+npm install -g ewf-validator-tool
 ```
 Read about available commands and their options using the `--help` flag
 ```bash
