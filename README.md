@@ -44,26 +44,26 @@ Options:
 ## How to use
 
 ### 1. Supplying the private key (credential)
-You can supply your validator account credentials 2 ways when needed:
+You can supply your validator account credentials **2 ways** when needed:
  1. Specifying a path to the encrypted ethereum keystore file with the `--keyfilepath` flag AND to to a text file containing only the password with the `--secretpath` flag. The path can be absolute or relative to the working directory.
     Example:
     ```bash
     validatortool transferto 0x2daa43fbcf5a5a7518b45665cc00d577f080f325 0.0001 -k "/home/aznagy/.local/share/io.parity.ethereum/keys/Volta/UTC--2018-07-31T13-41-14Z--f18df90c-f86c-0545-9f43-615834e7e778" -s ../../work/ewf/pwd
     ```
+    The input files are left untouched.
   1. Specifying the address and private key in a json file in the  format below, then passing the path to `--accountfilepath`. 
-   
-     :exclamation: This file is deleted after usage. This is intentional so you do not forget your private key laying around in a textfile.
      ```json
      {
        "address": "0xYourPublicValidatorAddressHere",
        "privateKey": "0xYourPrivateKeyHere"
      }
      ```
-     Example
+     :exclamation: This file is deleted after usage. This is intentional so you do not forget your private key laying around in a textfile.
+     Example:
      ```bash
      validatortool transferto 0x2daa43fbcf5a5a7518b45665cc00d577f080f325 0.0001 -a ./account/account.json
      ```
-     The with `accountfile ` command you can create an empty accountfile skeleton that you can fill up with your details
+     With the `accountfile ` command you can create an empty accountfile skeleton that you can fill up with your credentials:
      ```bash
      > validatortool accountfile ./account/account.json
      Success! File created at: /home/aznagy/personal/validator-tool/account/account.json
@@ -77,6 +77,7 @@ You can supply an rpc address with the `--rpc` flag. Websocket and http connecti
 ## Examples
 
 ### 1. Making a transfer from a validator account
+Example 1 with using an accountfile:
 ```bash
 > validatortool transferto 0x2daa43fbcf5a5a7518b45665cc00d577f080f325 0.0001 -a ./account/account.json -r https://volta-rpc.energyweb.org
 
@@ -90,7 +91,7 @@ Success!
 }
 Validator account file successfully deleted.
 ```
-Example 2:
+Example 2 with a keystore file:
 ```bash
 > validatortool transferto 0x2daa43fbcf5a5a7518b45665cc00d577f080f325 0.0001 -k "/home/aznagy/.local/share/io.parity.ethereum/keys/Volta/UTC--2018-07-31T13-41-14Z--f18df90c-f86c-0545-9f43-615834e7e778" -s /home/aznagy/work/ewf/pwd -r wss://volta-rpc.energyweb.org/ws
 
@@ -104,6 +105,7 @@ Success!
 }
 ```
 ### 2. Checking the payout address of the validator
+Example 1:
 ```bash
 > validatortool payout check 0x0052569B2d787bB89d711e4aFB56F9C1E420a2a6 -r https://volta-rpc.energyweb.org
 
@@ -119,6 +121,7 @@ Successful call! Payout address of 0x2dAA43fBCF5A5A7518b45665cC00D577F080F325 is
 ```
 
 ### 3. Changing the payout address of the validator
+Example 1 with a keystore file:
 ```bash
 validatortool payout changeto 0x2daa43fbcf5a5a7518b45665cc00d577f080f325 -k "/home/aznagy/.local/share/io.parity.ethereum/keys/Volta/UTC--2018-07-31T13-41-14Z--f18df90c-f86c-0545-9f43-615834e7e778" -s /home/aznagy/work/ewf/pwd -r https://volta-rpc.energyweb.org
 Connected to Volta (test network)
@@ -131,7 +134,7 @@ Change of payout address successful!
   "events": {}
 }
 ```
-Example 2:
+Example 2 with using an accountfile:
 ```bash
 > validatortool payout changeto 0x2daa43fbcf5a5a7518b45665cc00d577f080f325 -a ./account/account.json -r https://volta-rpc.energyweb.org
 
