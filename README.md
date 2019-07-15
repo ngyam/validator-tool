@@ -51,6 +51,9 @@ Options:
   --version  Show version number                                       [boolean]
   --help     Show help                                                 [boolean]
 ```
+
+For using the docker image, see below.
+
 ## How to use the tool
 
 ### 1. Supplying the private key (credential)
