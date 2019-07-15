@@ -164,7 +164,7 @@ Validator account file successfully deleted.
 ```
 
 ## How to use with Docker
-With docker you don't have to have node/npm installed, so it is more feasible and safe to be run on validator machines. The tool is already installed in the container.
+With docker you don't have to have node/npm installed, so it is more feasible and safe to be run on validator machines. The tool is already installed in the container, and in this case it can be only used with the keystore file method.
 
 You need to mount the keystore file and password files as volumes with the `-v` flag like the following:
 
