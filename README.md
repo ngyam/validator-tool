@@ -5,14 +5,24 @@ Features:
  - changing of validator payout address
  - checking of validator payout address
  - sending funds from validator account
+ - Dockerization to running from validator machines
  - .. with transaction signing locally (not using `personal`, or other compromising APIs)
  - .. with 2 ways of supplying the credentials
 
 :exclamation: Disclaimer: this is my own project, and I am not responsible for any data/key loss, leak or security issue. Use at your own risk.
 
+## Maintainers
+Tool: @ngyam
+
+Dockerization: @marcelorocha-e
+
 ## Prerequisites
+Either:
  - node 8+
  - npm
+
+or:
+ - Docker
 
 ## Quickstart
 
@@ -41,7 +51,7 @@ Options:
   --version  Show version number                                       [boolean]
   --help     Show help                                                 [boolean]
 ```
-## How to use
+## How to use the tool
 
 ### 1. Supplying the private key (credential)
 You can supply your validator account credentials **2 ways** when needed:
@@ -74,9 +84,9 @@ The imported/decrypted account is added to web3's software wallet for the period
 
 You can supply an rpc address with the `--rpc` flag. Websocket and http connections are supported. You can connect to remote nodes too, though local ones are always preferred.
 
-## Examples
+### Examples
 
-### 1. Making a transfer from a validator account
+#### 1. Making a transfer from a validator account
 Example 1 with using an accountfile:
 ```bash
 > validatortool transferto 0x2daa43fbcf5a5a7518b45665cc00d577f080f325 0.0001 -a ./account/account.json -r https://volta-rpc.energyweb.org
@@ -104,7 +114,7 @@ Success!
   "transactionIndex": 0
 }
 ```
-### 2. Checking the payout address of the validator
+#### 2. Checking the payout address of the validator
 Example 1:
 ```bash
 > validatortool payout check 0x0052569B2d787bB89d711e4aFB56F9C1E420a2a6 -r https://volta-rpc.energyweb.org
@@ -120,7 +130,7 @@ Connected to Volta (test network)
 Successful call! Payout address of 0x2dAA43fBCF5A5A7518b45665cC00D577F080F325 is: 0x2dAA43fBCF5A5A7518b45665cC00D577F080F325
 ```
 
-### 3. Changing the payout address of the validator
+#### 3. Changing the payout address of the validator
 Example 1 with a keystore file:
 ```bash
 validatortool payout changeto 0x2daa43fbcf5a5a7518b45665cc00d577f080f325 -k "/home/aznagy/.local/share/io.parity.ethereum/keys/Volta/UTC--2018-07-31T13-41-14Z--f18df90c-f86c-0545-9f43-615834e7e778" -s /home/aznagy/work/ewf/pwd -r https://volta-rpc.energyweb.org
@@ -150,6 +160,36 @@ Change of payout address successful!
 Validator account file successfully deleted.
 ```
 
+## How to use with Docker
+With docker you don't have to have node/npm installed, so it is more feasible and safe to be run on validator machines. The tool is already installed in the container.
+
+You need to mount the keystore file and password files as volumes with the `-v` flag like the following:
+
+```bash
+dokcer run -it \
+  -v /path/to/the/keystorefile:/keyfile \
+  -v /path/to/the/passwordfile:/keypass \
+  aznagy:ewf-validator-tool \
+  <validator tool command and options>
+```
+The docker image gets pulled automatically if not found on your machine.
+
+### Examples
+#### 1. Making a transfer from a validator account
+```bash
+docker run -it -v "/home/aznagy/.local/share/io.parity.ethereum/keys/Volta/UTC--2018-07-31T13-41-14Z--f18df90c-f86c-0545-9f43-615834e7e778":/keyfile -v /home/aznagy/work/ewf/pwd:/keypass aznagy/ewf-validator-tool:latest transferto 0x2daa43fbcf5a5a7518b45665cc00d577f080f325 0.001 -r wss://volta-rpc.energyweb.org/ws
+```
+#### 2. Checking the payout address of the validator
+
+```bash
+docker run -it -v "/home/aznagy/.local/share/io.parity.ethereum/keys/Volta/UTC--2018-07-31T13-41-14Z--f18df90c-f86c-0545-9f43-615834e7e778":/keyfile -v /home/aznagy/work/ewf/pwd:/keypass aznagy/ewf-validator-tool:latest payout check 0x2dAA43fBCF5A5A7518b45665cC00D577F080F325 -r wss://volta-rpc.energyweb.org/ws
+```
+
+#### 3. Changing the payout address of the validator
+
+```bash
+docker run -it -v "/home/aznagy/.local/share/io.parity.ethereum/keys/Volta/UTC--2018-07-31T13-41-14Z--f18df90c-f86c-0545-9f43-615834e7e778":/keyfile -v /home/aznagy/work/ewf/pwd:/keypass aznagy/ewf-validator-tool:latest payout changeto 0x2daa43fbcf5a5a7518b45665cc00d577f080f325 -r https://volta-rpc.energyweb.org
+```
 
 ## Contributing
 

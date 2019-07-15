@@ -4,7 +4,7 @@
 
 Following these guidelines helps to communicate that you respect the time of the developers managing and developing this open source project. In return, they should reciprocate that respect in addressing your issue, assessing changes, and helping you finalize your pull requests.
 
-Your input is appreciated! I want to make contributing to this project as easy and transparent as possible, whether it's:
+Your input is appreciated! We want to make contributing to this project as easy and transparent as possible, whether it's:
  - Reporting a bug
  - Discussing the current state of the code
  - Submitting a fix
