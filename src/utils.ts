@@ -16,7 +16,7 @@ export namespace Constants {
 
 export async function connect(endpoint: string): Promise<any> {
     let web3 = new Web3(endpoint)
-    console.log(`Connected to ${Constants.mapIdToName[await web3.eth.getChainId()] || "Unknown network"}`)
+    console.log(`Connected to ${Constants.mapIdToName[await web3.eth.net.getId()] || "Unknown network"}`)
     web3.transactionConfirmationBlocks = 1
     web3.eth.transactionConfirmationBlocks = 1
     return web3

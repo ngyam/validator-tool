@@ -25,7 +25,7 @@ var Constants;
 function connect(endpoint) {
     return __awaiter(this, void 0, void 0, function* () {
         let web3 = new Web3(endpoint);
-        console.log(`Connected to ${Constants.mapIdToName[yield web3.eth.getChainId()] || "Unknown network"}`);
+        console.log(`Connected to ${Constants.mapIdToName[yield web3.eth.net.getId()] || "Unknown network"}`);
         web3.transactionConfirmationBlocks = 1;
         web3.eth.transactionConfirmationBlocks = 1;
         return web3;
