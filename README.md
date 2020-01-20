@@ -1,4 +1,5 @@
 # Validator tool
+[![npm (tag)](https://img.shields.io/npm/v/ewf-validator-tool/latest)](https://www.npmjs.com/package/ewf-validator-tool/v/latest)
 
 Command line tool for Volta and EWC validators, for sensitive operations that require to use the validator accounts.
 Features:
