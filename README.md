@@ -169,10 +169,10 @@ With docker you don't have to have node/npm installed, so it is more feasible an
 You need to mount the keystore file and password files as volumes with the `-v` flag like the following:
 
 ```bash
-dokcer run -it \
+docker run -it \
   -v /path/to/the/keystorefile:/keyfile \
   -v /path/to/the/passwordfile:/keypass \
-  aznagy:ewf-validator-tool \
+  aznagy/ewf-validator-tool \
   <validator tool command and options>
 ```
 The docker image gets pulled automatically if not found on your machine.
